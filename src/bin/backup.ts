@@ -21,7 +21,6 @@ const parser = new ArgumentParser({
   add_help: true,
 });
 
-parser.add_argument('-v', '--version', { action: 'version', version });
 parser.add_argument('projectId', { help: 'Datastore project ID' });
 parser.add_argument('bucket', { help: 'GCS bucket to store backup' });
 parser.add_argument('-d', '--backupDir', {
