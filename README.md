@@ -40,7 +40,6 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
   -d BACKUPDIR, --backupDir BACKUPDIR
                         prefix/dir within bucket
   -n BACKUPNAME, --backupName BACKUPNAME
