@@ -1,7 +1,7 @@
 {
   "name": "datastore-backup",
   "bin": "build/main/bin/backup.js",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Programatic Backup of Google Cloud Datastore",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -47,7 +47,7 @@
     "@google-cloud/datastore": "^6.6.2",
     "@google-cloud/storage": "^5.16.1",
     "argparse": "^2.0.1",
-    "ora": "5.4.1",
+    "ora": "^5.4.1",
     "pretty-bytes": "^5.6.0",
     "ramda": "^0.27.1"
   },
