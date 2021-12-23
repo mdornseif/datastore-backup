@@ -2,17 +2,17 @@
 
 [From the Commandline](https://cloud.google.com/sdk/gcloud/reference/datastore/export):
 
-sh```
+```
 gcloud datastore export gs://exampleBucket/backupdir
 
-````
+```
 
 Or in node.js:
 
-js```
-    const datastore = new Datastore()
-    datastore.export({outputUrlPrefix: 'gs://exampleBucket/backupdir'});
-````
+```js
+const datastore = new Datastore();
+datastore.export({ outputUrlPrefix: 'gs://exampleBucket/backupdir' });
+```
 
 So why do you need a library for that? Because it is in the details!
 
@@ -78,6 +78,7 @@ await dumpAllKinds(new Datastore({ projectId: 'sampleproj' }), 'samplebucket-tmp
 
 # See also
 
+- [datastore-to-bigquery](https://www.npmjs.com/package/datastore-to-bigquery) to load the data produced by this module into BigQuery.
 - [Google DatastoreImport/Export Documentation](https://cloud.google.com/datastore/docs/export-import-entities#rest)
 - [node.js low-level Datastore export API](https://googleapis.dev/nodejs/datastore/latest/google.datastore.admin.v1.DatastoreAdmin.html#exportEntities2)
 - [firestore-to-bigquery-export npm module](https://www.npmjs.com/package/@pokutuna/firestore-to-bigquery) for Cloud Functions
