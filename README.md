@@ -1,10 +1,18 @@
-[Exporting Data from Google Cloud Datastore](https://cloud.google.com/datastore/docs/export-import-entities#rest_ seems easy:
+[![Build Status](https://img.shields.io/travis/mdornseif/datastore-backup.svg?style=flat-square&color=%23007a1f)](https://travis-ci.org/mdornseif/datastore-backup)
+[![version](https://img.shields.io/npm/v/datastore-backup.svg?style=flat-square)](https://npmjs.org/datastore-backup)
+[![package size](https://packagephobia.com/badge?p=datastore-backup)](https://packagephobia.com/result?p=datastore-backup)
+[![license](https://img.shields.io/npm/l/datastore-backup?color=%23007a1f&style=flat-square)](https://github.com/mdornseif/datastore-backup/blob/master/LICENSE)
+[![dependencies](https://img.shields.io/librariesio/release/npm/datastore-backup?color=%23007a1f&style=flat-square)](https://libraries.io/npm/datastore-backup)
+[![downloads](https://img.shields.io/npm/dm/datastore-backup?style=flat-square&color=%23007a1f)](https://npmcharts.com/compare/datastore-backup)
+
+# datastore-backup
+
+[Exporting Data from Google Cloud Datastore](https://cloud.google.com/datastore/docs/export-import-entities#rest_) seems easy:
 
 [From the Commandline](https://cloud.google.com/sdk/gcloud/reference/datastore/export):
 
 ```
 gcloud datastore export gs://exampleBucket/backupdir
-
 ```
 
 Or in node.js:
