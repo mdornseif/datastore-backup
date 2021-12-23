@@ -1,7 +1,7 @@
 {
   "name": "datastore-backup",
   "bin": "build/main/bin/datastoreDump.js",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Programatic Backup of Google Cloud Datastore",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
@@ -76,7 +76,7 @@
     "nyc": "^15.1.0",
     "open-cli": "^6.0.1",
     "prettier": "^2.1.1",
-    "standard-version": "^9.0.0",
+    "standard-version": "^9.3.2",
     "ts-node": "^10.4.0",
     "typedoc": "^0.19.0",
     "typescript": "^4.0.2"
