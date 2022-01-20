@@ -55,7 +55,7 @@ async function getBackupDefaultName(datastore: Datastore) {
       .replaceAll(/\.\d+$/g, '') +
     '-' +
     (await datastore.getProjectId()) +
-    (datastore.namespace ? ':' + datastore.namespace : '')
+    (datastore.namespace ? `:${datastore.namespace}` : '')
   );
 }
 
@@ -115,7 +115,7 @@ async function dumpKinds(
     );
     return {
       outputUrl: response[0].outputUrl,
-      operation: operation,
+      operation,
       result: response,
     };
   } catch (error) {
@@ -134,7 +134,7 @@ export async function getNamespaces(datastore: Datastore): Promise<string[]> {
 }
 /** Returns a list of all Kinds in a Datastore for the current namespace.
  *
- * Kinds where the name starts with `_` are supressed.
+ * Kinds where the name starts with `_` are suppressed.
  */
 async function getKindNames(datastore: Datastore): Promise<string[]> {
   const query = datastore.createQuery('__kind__').select('__key__');
