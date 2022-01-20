@@ -11,9 +11,6 @@ import ora from 'ora';
 
 import { dumpAllKinds } from '../lib/datastore-backup';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { version } = require('../../package.json');
-
 const parser = new ArgumentParser({
   description: 'Backup Datastore.',
   epilog:
@@ -21,7 +18,6 @@ const parser = new ArgumentParser({
   add_help: true,
 });
 
-parser.add_argument('-v', '--version', { action: 'version', version });
 parser.add_argument('projectId', { help: 'Datastore project ID' });
 parser.add_argument('bucket', { help: 'GCS bucket to store backup' });
 parser.add_argument('-d', '--backupDir', {
