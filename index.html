@@ -1,0 +1,192 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>datastore-backup</title>
+	<meta name="description" content="Documentation for datastore-backup">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">datastore-backup</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>datastore-backup</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p>[Exporting Data from Google Cloud Datastore](<a href="https://cloud.google.com/datastore/docs/export-import-entities#rest">https://cloud.google.com/datastore/docs/export-import-entities#rest</a>_ seems easy:</p>
+				<p><a href="https://cloud.google.com/sdk/gcloud/reference/datastore/export">From the Commandline</a>:</p>
+				<pre><code>gcloud datastore <span class="hljs-keyword">export</span> gs:<span class="hljs-comment">//exampleBucket/backupdir</span>
+</code></pre>
+				<p>Or in node.js:</p>
+				<pre><code class="language-js"><span class="hljs-keyword">const</span> datastore = <span class="hljs-keyword">new</span> Datastore();
+datastore.export({ <span class="hljs-attr">outputUrlPrefix</span>: <span class="hljs-string">&#x27;gs://exampleBucket/backupdir&#x27;</span> });
+</code></pre>
+				<p>So why do you need a library for that? Because it is in the details!</p>
+				<p>For one thing the code above contains an export containing all kinds <a href="https://cloud.google.com/bigquery/docs/loading-data-cloud-datastore">can not be loaded into BigQuery</a>: Data exported without specifying an entity filter cannot be loaded into BigQuery.&quot;</p>
+				<p>So you need a list of all Kinds in the Datastore. But there are <a href="https://cloud.google.com/datastore/docs/export-import-entities#entity_filter">Limits on entity filters</a>: &quot;Each request is limited to 100 entity filter combinations, where each combination of filtered kind and namespace counts as a separate filter towards this limit.&quot; (It was 50 e few years before.)</p>
+				<p>And there is <a href="https://cloud.google.com/datastore/docs/export-import-entities">an other limit</a>: &quot;The managed export and import service limits the number of concurrent exports and imports to 50 and allows a maximum of 20 export and import requests per minute for a project.&quot;</p>
+				<p>So if you have a lot of entities you have to do some slicing and dicing.</p>
+				<a href="#cli-usage" id="cli-usage" style="color: inherit; text-decoration: none;">
+					<h2>CLI Usage</h2>
+				</a>
+				<p>Command line usage is simple. You have to provide the projectId of the datastore and a bucket name. Both have to be in the same region.</p>
+				<pre><code>% yarn <span class="hljs-keyword">ts</span>-node src/bin/backup.<span class="hljs-keyword">ts</span> --<span class="hljs-keyword">help</span>
+usage: backup.<span class="hljs-keyword">ts</span> [-h] [-v] [-d BACKUPDIR] [-n BACKUPNAME] [-s NAMESPACE] projectId bucket
+
+Backup Datastore.
+
+positional <span class="hljs-keyword">argument</span><span class="hljs-variable">s:</span>
+  projectId             Datastore project ID
+  bucket                GCS bucket <span class="hljs-keyword">to</span> store backup
+
+optional <span class="hljs-keyword">argument</span><span class="hljs-variable">s:</span>
+  -h, --<span class="hljs-keyword">help</span>            show this <span class="hljs-keyword">help</span> message <span class="hljs-built_in">and</span> <span class="hljs-keyword">exit</span>
+  -d BACKUPDIR, --backupDir BACKUPDIR
+                        prefix/dir within bucket
+  -n BACKUPNAME, --backupName BACKUPNAME
+                        name of backup (defaul<span class="hljs-variable">t:</span> autogenerated)
+  -s NAMESPACE, --namespace NAMESPACE
+                        datastore namespace
+
+Please provide `GOOGLE_APPLICATION_CREDENTIALS` via the Environment!
+</code></pre>
+				<pre><code>% export GOOGLE_APPLICATION_CREDENTIALS=~/sampleproj-b0a74af0545e.json
+% yarn ts-node src<span class="hljs-regexp">/bin/</span>backup.ts sampleproj samplebucket-tmp
+ℹ backup to gs:<span class="hljs-regexp">//</span>hudora-tmp<span class="hljs-regexp">/bak/</span><span class="hljs-number">20211221</span>T212651-sampleproj
+ℹ Dumping datastore sampleproj
+✔ <span class="hljs-number">2</span> Kinds
+<span class="hljs-number">2</span> kinds  ℹ Dumping NumberingAncestor, NumberingItem
+<span class="hljs-number">2</span> kinds  ℹ Dumping to gs:<span class="hljs-regexp">//</span>samplebucket-tmp<span class="hljs-regexp">/bak/</span><span class="hljs-number">20211221</span>T212651-sampleproj-<span class="hljs-number">0</span>
+<span class="hljs-number">2</span> kinds  ✔ Dumping finished <span class="hljs-number">27150</span> records (<span class="hljs-number">4.04</span> MB) <span class="hljs-keyword">in</span> <span class="hljs-number">51</span>s
+<span class="hljs-number">2</span> kinds  ✔ written gs:<span class="hljs-regexp">//</span>samplebucket-tmp<span class="hljs-regexp">/bak/</span><span class="hljs-number">20211221</span>T212651-sampleproj-<span class="hljs-number">0</span>/<span class="hljs-number">20211221</span>T212651-sampleproj-<span class="hljs-number">0</span>.overall_export_metadata
+✨  Done <span class="hljs-keyword">in</span> <span class="hljs-number">54.16</span>s.
+</code></pre>
+				<p>This generates a single folder structure under <code>gs://samplebucket-tmp/bak/20211221T212651-sampleproj-0</code>. For projects with more than 100 entities more folders will be generated.</p>
+				<p>There is one subfolder per kind containing the Entities encoded in <a href="https://github.com/google/leveldb">LevelDB Format</a>.</p>
+				<a href="#programmatic-usage" id="programmatic-usage" style="color: inherit; text-decoration: none;">
+					<h2>Programmatic Usage</h2>
+				</a>
+				<pre><code><span class="hljs-keyword">import</span> { Datastore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;@google-cloud/datastore&#x27;</span>;
+<span class="hljs-keyword">import</span> { dumpAllKinds } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../lib/datastore-backup&#x27;</span>;
+
+<span class="hljs-keyword">await</span> dumpAllKinds(<span class="hljs-keyword">new</span> Datastore({ projectId: <span class="hljs-string">&#x27;sampleproj&#x27;</span> }), <span class="hljs-string">&#x27;samplebucket-tmp&#x27;</span>)
+</code></pre>
+				<a href="#see-also" id="see-also" style="color: inherit; text-decoration: none;">
+					<h1>See also</h1>
+				</a>
+				<ul>
+					<li><a href="https://www.npmjs.com/package/datastore-to-bigquery">datastore-to-bigquery</a> to load the data produced by this module into BigQuery.</li>
+					<li><a href="https://cloud.google.com/datastore/docs/export-import-entities#rest">Google DatastoreImport/Export Documentation</a></li>
+					<li><a href="https://googleapis.dev/nodejs/datastore/latest/google.datastore.admin.v1.DatastoreAdmin.html#exportEntities2">node.js low-level Datastore export API</a></li>
+					<li><a href="https://www.npmjs.com/package/@pokutuna/firestore-to-bigquery">firestore-to-bigquery-export npm module</a> for Cloud Functions</li>
+					<li><a href="https://www.npmjs.com/package/firestore-to-bigquery-export">firestore-to-bigquery-export npm module</a> an other one wth some documentation</li>
+				</ul>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#args" class="tsd-kind-icon">args</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#parser" class="tsd-kind-icon">parser</a>
+					</li>
+					<li class=" tsd-kind-variable">
+						<a href="globals.html#version" class="tsd-kind-icon">version</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#dumpallkinds" class="tsd-kind-icon">dump<wbr>All<wbr>Kinds</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#dumpkinds" class="tsd-kind-icon">dump<wbr>Kinds</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getbackupdefaultname" class="tsd-kind-icon">get<wbr>Backup<wbr>Default<wbr>Name</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getkindnames" class="tsd-kind-icon">get<wbr>Kind<wbr>Names</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#getnamespaces" class="tsd-kind-icon">get<wbr>Namespaces</a>
+					</li>
+					<li class=" tsd-kind-function">
+						<a href="globals.html#main" class="tsd-kind-icon">main</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
